@@ -7,32 +7,32 @@ object SampleProgramsSuite extends FunSuite {
   test("args one") {
     val prog =
       for {
-        _ <- BashProgram.args("abc")
+        _ <- Args("abc")
       } yield ()
 
     val expected =
       """abc=$1""".stripMargin
 
-    expect.eql(expected, Encoder.toLines(prog).mkString("\n"))
+    expect.eql(expected, Encoder.encode(prog))
   }
 
   test("args two") {
     val prog =
       for {
-        _ <- BashProgram.args("abc", "def")
+        _ <- Args("abc", "def")
       } yield ()
 
     val expected =
       """abc=$1
         |def=$2""".stripMargin
 
-    expect.eql(expected, Encoder.toLines(prog).mkString("\n"))
+    expect.eql(expected, Encoder.encode(prog))
   }
 
   test("args three") {
     val prog =
       for {
-        _ <- BashProgram.args("abc", "def", "xyz")
+        _ <- Args("abc", "def", "xyz")
       } yield ()
 
     val expected =
@@ -40,6 +40,6 @@ object SampleProgramsSuite extends FunSuite {
         |def=$2
         |xyz=$3""".stripMargin
 
-    expect.eql(expected, Encoder.toLines(prog).mkString("\n"))
+    expect.eql(expected, Encoder.encode(prog))
   }
 }

@@ -1,6 +1,7 @@
 package com.htmlism.bashmonad
 
 import scala.annotation.tailrec
+import scala.util.chaining._
 
 import cats._
 import cats.syntax.all._
@@ -58,9 +59,20 @@ object BashProgram {
   def cmd(xs: String*): BashProgram[Unit] = {
     val quotedLine =
       xs
-        .map(s => "\"" + s + "\"")
+        .map(quote)
         .mkString(" ")
 
     BashProgram((), quotedLine)
   }
+
+  private def quote(s: String) =
+    s
+      .replace("\\", "\\\\")
+      .replace("\"", "\\\"")
+      .pipe {
+        case s if s.contains("${") =>
+          "\"" + s + "\""
+        case s =>
+          s
+      }
 }

@@ -1,8 +1,8 @@
 package com.htmlism.bashmonad
 
 object Encoder {
-  def toLines(xs: List[BashProgram[_]]): List[String] =
-    interFlatMap(xs)(List(""), _.lines)
+  def toLines(x: BashProgram[_]): List[String] =
+    interFlatMap(x.flatten)(List(""), _.lines)
 
   def interFlatMap[A, B](xs: List[A])(x: List[B], f: A => List[B]): List[B] =
     xs match {

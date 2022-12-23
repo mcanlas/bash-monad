@@ -36,6 +36,6 @@ object BashMonadSuite extends FunSuite {
         }
         .flatten
 
-    expect.eql(3, countingDown.size)
+    expect.eql(4, countingDown.size)
   }
 }

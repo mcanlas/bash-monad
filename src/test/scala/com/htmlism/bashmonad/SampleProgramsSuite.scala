@@ -46,7 +46,7 @@ object SampleProgramsSuite extends FunSuite {
   test("raw command") {
     val prog =
       for {
-        _ <- BashProgram.raw("ls -la foo bar")
+        _ <- Raw("ls -la foo bar")
       } yield ()
 
     val expected =

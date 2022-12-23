@@ -9,4 +9,7 @@ package object bashmonad {
         .flatMap(ab => List("${", ab._1.name, "}", ab._2)))
         .mkString("")
   }
+
+  implicit def rawToBash(r: Raw): BashProgram[Unit] =
+    BashProgram((), r.s)
 }

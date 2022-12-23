@@ -7,6 +7,13 @@ import cats._
 import cats.syntax.all._
 
 final case class BashProgram[A](x: A, lines: List[String], parent: Option[BashProgram[_]]) {
+  def map[B](f: A => B): BashProgram[B] =
+    copy(x = f(x))
+
+  def flatMap[B](f: A => BashProgram[B]): BashProgram[B] =
+    f(x)
+      .copy(parent = this.some)
+
   def flatten: List[BashProgram[_]] = {
     @tailrec
     def recur(x: BashProgram[_], all: List[BashProgram[_]]): List[BashProgram[_]] =
@@ -14,7 +21,7 @@ final case class BashProgram[A](x: A, lines: List[String], parent: Option[BashPr
         case Some(p) =>
           recur(p, p :: all)
         case None =>
-          all
+          this :: all
       }
 
     recur(this, Nil)
@@ -28,8 +35,8 @@ object BashProgram {
         BashProgram(x, Nil, None)
 
       def flatMap[A, B](fa: BashProgram[A])(f: A => BashProgram[B]): BashProgram[B] =
-        f(fa.x)
-          .copy(parent = fa.some)
+        fa
+          .flatMap(f)
 
       def tailRecM[A, B](a: A)(f: A => BashProgram[Either[A, B]]): BashProgram[B] = {
         @tailrec
@@ -49,12 +56,6 @@ object BashProgram {
 
   def apply[A](x: A, xs: String*): BashProgram[A] =
     BashProgram(x, xs.toList, None)
-
-  /**
-    * Use to construct a command that doesn't use any quoting
-    */
-  def raw(s: String): BashProgram[Unit] =
-    BashProgram((), s)
 
   def cmd(xs: String*): BashProgram[Unit] = {
     val quotedLine =

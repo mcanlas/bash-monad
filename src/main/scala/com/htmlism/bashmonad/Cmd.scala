@@ -1,3 +1,3 @@
 package com.htmlism.bashmonad
 
-final case class Cmd(xs: String*) extends AnyVal
+final case class Cmd(xs: BashArgument*) extends AnyVal

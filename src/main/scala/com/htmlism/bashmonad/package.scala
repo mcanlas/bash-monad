@@ -12,6 +12,9 @@ package object bashmonad {
         .mkString("")
   }
 
+  implicit def strToArg(s: String): BashArgument =
+    BashArgument(s)
+
   implicit def rawToBash(r: Raw): BashProgram[Unit] =
     BashProgram((), r.s)
 
@@ -19,6 +22,7 @@ package object bashmonad {
     val quotedLine =
       cmd
         .xs
+        .map(_.s)
         .map(quote)
         .mkString(" ")
 

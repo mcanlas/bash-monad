@@ -58,7 +58,7 @@ object SampleProgramsSuite extends FunSuite {
   test("quoted command") {
     val prog =
       for {
-        _ <- BashProgram.cmd("ls", "-la", "foo", "bar")
+        _ <- Cmd("ls", "-la", "foo", "bar")
       } yield ()
 
     val expected =
@@ -70,7 +70,7 @@ object SampleProgramsSuite extends FunSuite {
   test("quoted command, escapes") {
     val prog =
       for {
-        _ <- BashProgram.cmd("echo", "\\", "\"")
+        _ <- Cmd("echo", "\\", "\"")
       } yield ()
 
     val expected =

@@ -48,4 +48,19 @@ object BashProgram {
 
   def apply[A](x: A, xs: String*): BashProgram[A] =
     BashProgram(x, xs.toList, None)
+
+  /**
+    * Use to construct a command that doesn't use any quoting
+    */
+  def raw(s: String): BashProgram[Unit] =
+    BashProgram((), s)
+
+  def cmd(xs: String*): BashProgram[Unit] = {
+    val quotedLine =
+      xs
+        .map(s => "\"" + s + "\"")
+        .mkString(" ")
+
+    BashProgram((), quotedLine)
+  }
 }

@@ -42,4 +42,28 @@ object SampleProgramsSuite extends FunSuite {
 
     expect.eql(expected, Encoder.encode(prog))
   }
+
+  test("raw command") {
+    val prog =
+      for {
+        _ <- BashProgram.raw("ls -la foo bar")
+      } yield ()
+
+    val expected =
+      """ls -la foo bar""".stripMargin
+
+    expect.eql(expected, Encoder.encode(prog))
+  }
+
+  test("quoted command") {
+    val prog =
+      for {
+        _ <- BashProgram.cmd("ls", "-la", "foo", "bar")
+      } yield ()
+
+    val expected =
+      """"ls" "-la" "foo" "bar"""".stripMargin
+
+    expect.eql(expected, Encoder.encode(prog))
+  }
 }

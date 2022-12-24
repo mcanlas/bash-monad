@@ -17,8 +17,8 @@ package object bashmonad {
   implicit def strToArg(s: String): BashArgument =
     BashArgument(s)
 
-  implicit def rawToBash(r: Raw): BashProgram[Unit] =
-    BashProgram((), r.s)
+  implicit def toBashProgram[A, B](x: A)(implicit enc: BashProgramEncoder[A, B]): BashProgram[B] =
+    enc.encode(x)
 
   implicit def cmdToBash(cmd: Cmd): BashProgram[Unit] = {
     val quotedLine =
@@ -28,7 +28,7 @@ package object bashmonad {
         .map(quote)
         .mkString(" ")
 
-    BashProgram((), quotedLine)
+    BashProgram(quotedLine)
   }
 
   private def quote(s: String) =
@@ -78,7 +78,7 @@ package object bashmonad {
           |  exit 1
           |fi""".stripMargin)
 
-      _ <- BashProgram((), indices, Nil)
+      _ <- BashProgram(indices)
     } yield vars
   }
 }

@@ -4,7 +4,7 @@ import scala.annotation.tailrec
 
 import cats._
 
-final case class BashProgram[A](x: A, lines: List[String], history: List[BashProgram[_]]) {
+final case class BashProgram[+A](x: A, lines: List[String], history: List[BashProgram[_]]) {
   def map[B](f: A => B): BashProgram[B] =
     copy(x = f(x))
 
@@ -49,6 +49,9 @@ object BashProgram {
       }
     }
 
-  def apply[A](x: A, xs: String*): BashProgram[A] =
-    BashProgram(x, xs.toList, Nil)
+  def apply(xs: List[String]): BashProgram[Unit] =
+    BashProgram((), xs, Nil)
+
+  def apply(xs: String*): BashProgram[Unit] =
+    BashProgram(xs.toList)
 }

@@ -10,9 +10,6 @@ package object bashmonad {
         .mkString("")
   }
 
-  implicit def strToArg(s: String): BashArgument =
-    BashArgument(s)
-
   implicit def toBashProgram[A, B](x: A)(implicit enc: BashProgramEncoder[A, B]): BashProgram[B] =
     enc.encode(x)
 }

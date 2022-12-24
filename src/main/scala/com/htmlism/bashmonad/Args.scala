@@ -47,7 +47,7 @@ object Args {
 
     val vars =
       xs
-        .map(EnvironmentVariable)
+        .map(EnvironmentVariable(_))
 
     val testExpr =
       "$# -ne " + xs.size.toString

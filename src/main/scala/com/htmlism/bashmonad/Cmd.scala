@@ -10,18 +10,6 @@ object Cmd {
       cmd
         .xs
         .map(_.s)
-        .map(quote)
         .mkString(" ")
         .pipe(BashProgram(_))
-
-  private def quote(s: String) =
-    s
-      .replace("\\", "\\\\")
-      .replace("\"", "\\\"")
-      .pipe {
-        case s if s.contains("${") =>
-          "\"" + s + "\""
-        case s =>
-          s
-      }
 }

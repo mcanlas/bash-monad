@@ -7,7 +7,9 @@ object SampleProgramsSuite extends FunSuite {
   test("args one") {
     val prog =
       for {
-        _ <- Args.string("abc")
+        abc <- Args.string("abc")
+
+        _ <- Cmd("echo", abc)
       } yield ()
 
     val expected =
@@ -16,7 +18,9 @@ object SampleProgramsSuite extends FunSuite {
         |  exit 1
         |fi
         |
-        |abc=$1""".stripMargin
+        |abc=$1
+        |
+        |echo "$abc"""".stripMargin
 
     expect.eql(expected, Encoder.encode(prog))
   }

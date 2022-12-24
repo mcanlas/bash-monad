@@ -62,6 +62,19 @@ object SampleProgramsSuite extends FunSuite {
     expect.eql(expected, Encoder.encode(prog))
   }
 
+  test("setting a variable") {
+    val prog =
+      for {
+        abc <- SetVar("abc", "123")
+      } yield abc
+
+    val expected =
+      """abc=123""".stripMargin
+
+    expect.same(EnvironmentVariable("abc"), prog.x) and
+      expect.eql(expected, Encoder.encode(prog))
+  }
+
   test("raw command") {
     val prog =
       for {

@@ -54,23 +54,31 @@ package object bashmonad {
     validateArgs(args.xs)
       .map(xs => (xs(0), xs(1), xs(2)))
 
-  private def validateArgs(xs: Seq[String]) = {
+  private def validateArgs(xs: List[String]) = {
     val indices =
       xs
-        .toList
         .zipWithIndex
         .map { case (s, i) => s + "=$" + (i + 1) }
 
     val vars =
       xs
-        .toList
         .map(EnvironmentVariable)
 
-    for {
-      _ <- BashProgram((), indices, Nil)
+    val testExpr =
+      "$# -ne " + xs.size.toString
 
-      _ <- Raw("""if
+    val template =
+      xs
+        .map(s => s"<$s>")
+        .mkString(" ")
+
+    for {
+      _ <- Raw(s"""if [ $testExpr ]; then
+          |  echo "Usage: $$0 $template"
+          |  exit 1
           |fi""".stripMargin)
+
+      _ <- BashProgram((), indices, Nil)
     } yield vars
   }
 }

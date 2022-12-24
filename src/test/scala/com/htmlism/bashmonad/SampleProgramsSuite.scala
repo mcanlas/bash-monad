@@ -11,10 +11,12 @@ object SampleProgramsSuite extends FunSuite {
       } yield ()
 
     val expected =
-      """abc=$1
+      """if [ $# -ne 1 ]; then
+        |  echo "Usage: $0 <abc>"
+        |  exit 1
+        |fi
         |
-        |if
-        |fi""".stripMargin
+        |abc=$1""".stripMargin
 
     expect.eql(expected, Encoder.encode(prog))
   }
@@ -26,11 +28,13 @@ object SampleProgramsSuite extends FunSuite {
       } yield ()
 
     val expected =
-      """abc=$1
-        |def=$2
+      """if [ $# -ne 2 ]; then
+        |  echo "Usage: $0 <abc> <def>"
+        |  exit 1
+        |fi
         |
-        |if
-        |fi""".stripMargin
+        |abc=$1
+        |def=$2""".stripMargin
 
     expect.eql(expected, Encoder.encode(prog))
   }
@@ -42,12 +46,14 @@ object SampleProgramsSuite extends FunSuite {
       } yield ()
 
     val expected =
-      """abc=$1
-        |def=$2
-        |xyz=$3
+      """if [ $# -ne 3 ]; then
+        |  echo "Usage: $0 <abc> <def> <xyz>"
+        |  exit 1
+        |fi
         |
-        |if
-        |fi""".stripMargin
+        |abc=$1
+        |def=$2
+        |xyz=$3""".stripMargin
 
     expect.eql(expected, Encoder.encode(prog))
   }

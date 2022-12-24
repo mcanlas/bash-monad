@@ -30,9 +30,9 @@ object BashMonadSuite extends FunSuite {
       implicitly[Monad[BashProgram]]
         .tailRecM(3) {
           case 0 =>
-            BashProgram("".asRight[Int], Nil, None)
+            BashProgram("".asRight[Int], Nil, Nil)
           case n =>
-            BashProgram((n - 1).asLeft[String], Nil, None)
+            BashProgram((n - 1).asLeft[String], Nil, Nil)
         }
         .flatten
 

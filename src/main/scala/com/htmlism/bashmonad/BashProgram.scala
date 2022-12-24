@@ -3,35 +3,28 @@ package com.htmlism.bashmonad
 import scala.annotation.tailrec
 
 import cats._
-import cats.syntax.all._
 
-final case class BashProgram[A](x: A, lines: List[String], parent: Option[BashProgram[_]]) {
+final case class BashProgram[A](x: A, lines: List[String], history: List[BashProgram[_]]) {
   def map[B](f: A => B): BashProgram[B] =
     copy(x = f(x))
 
-  def flatMap[B](f: A => BashProgram[B]): BashProgram[B] =
-    f(x)
-      .copy(parent = this.some)
+  def flatMap[B](f: A => BashProgram[B]): BashProgram[B] = {
+    val fb =
+      f(x)
 
-  def flatten: List[BashProgram[_]] = {
-    @tailrec
-    def recur(x: BashProgram[_], all: List[BashProgram[_]]): List[BashProgram[_]] =
-      x.parent match {
-        case Some(p) =>
-          recur(p, x :: all)
-        case None =>
-          x :: all
-      }
-
-    recur(this, Nil)
+    fb
+      .copy(history = this.history ::: this :: fb.history)
   }
+
+  def flatten: List[BashProgram[_]] =
+    history :+ this
 }
 
 object BashProgram {
   implicit val bashMonad: Monad[BashProgram] =
     new Monad[BashProgram] {
       def pure[A](x: A): BashProgram[A] =
-        BashProgram(x, Nil, None)
+        BashProgram(x, Nil, Nil)
 
       def flatMap[A, B](fa: BashProgram[A])(f: A => BashProgram[B]): BashProgram[B] =
         fa
@@ -39,20 +32,23 @@ object BashProgram {
 
       def tailRecM[A, B](a: A)(f: A => BashProgram[Either[A, B]]): BashProgram[B] = {
         @tailrec
-        def recur(res: BashProgram[Either[A, B]]): BashProgram[B] =
+        def recur(res: BashProgram[Either[A, B]], agg: List[BashProgram[_]]): BashProgram[B] =
           res.x match {
             case Left(a) =>
-              recur(f(a).copy(parent = res.some))
+              val fb =
+                f(a)
+
+              recur(fb, fb :: agg)
 
             case Right(b) =>
-              res
-                .copy(x = b)
+              pure(b)
+                .copy(history = agg)
           }
 
-        recur(f(a))
+        recur(f(a), Nil)
       }
     }
 
   def apply[A](x: A, xs: String*): BashProgram[A] =
-    BashProgram(x, xs.toList, None)
+    BashProgram(x, xs.toList, Nil)
 }

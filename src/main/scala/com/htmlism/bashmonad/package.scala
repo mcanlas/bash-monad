@@ -1,7 +1,5 @@
 package com.htmlism
 
-import scala.util.chaining._
-
 import cats.syntax.all._
 
 package object bashmonad {
@@ -19,28 +17,6 @@ package object bashmonad {
 
   implicit def toBashProgram[A, B](x: A)(implicit enc: BashProgramEncoder[A, B]): BashProgram[B] =
     enc.encode(x)
-
-  implicit def cmdToBash(cmd: Cmd): BashProgram[Unit] = {
-    val quotedLine =
-      cmd
-        .xs
-        .map(_.s)
-        .map(quote)
-        .mkString(" ")
-
-    BashProgram(quotedLine)
-  }
-
-  private def quote(s: String) =
-    s
-      .replace("\\", "\\\\")
-      .replace("\"", "\\\"")
-      .pipe {
-        case s if s.contains("${") =>
-          "\"" + s + "\""
-        case s =>
-          s
-      }
 
   implicit def args1ToBash(args: Args1): BashProgram[EnvironmentVariable] =
     validateArgs(args.xs)

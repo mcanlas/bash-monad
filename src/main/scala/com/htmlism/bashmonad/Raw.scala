@@ -6,6 +6,6 @@ package com.htmlism.bashmonad
 final case class Raw(s: String) extends AnyVal
 
 object Raw {
-  implicit val encoder: BashProgramEncoder[Raw, Unit] =
+  implicit val rawAsBash: BashProgramEncoder[Raw, Unit] =
     (r: Raw) => BashProgram(r.s)
 }

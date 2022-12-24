@@ -5,7 +5,7 @@ import scala.util.chaining._
 final case class Cmd(xs: BashArgument*) extends AnyVal
 
 object Cmd {
-  implicit val encoder: BashProgramEncoder[Cmd, Unit] =
+  implicit val cmdAsBash: BashProgramEncoder[Cmd, Unit] =
     (cmd: Cmd) =>
       cmd
         .xs

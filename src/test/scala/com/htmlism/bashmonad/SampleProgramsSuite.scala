@@ -99,7 +99,7 @@ object SampleProgramsSuite extends FunSuite {
     expect.eql(expected, Encoder.encode(prog))
   }
 
-  test("quoted command, escapes") {
+  test("quoted command, simple escapes") {
     val prog =
       for {
         _ <- Cmd("echo", "\\", "\"")
@@ -107,6 +107,22 @@ object SampleProgramsSuite extends FunSuite {
 
     val expected =
       """echo \\ \"""".stripMargin
+
+    expect.eql(expected, Encoder.encode(prog))
+  }
+
+  test("quoted command, direct variable use") {
+    val prog =
+      for {
+        abc <- SetVar("abc", "123")
+
+        _ <- Cmd("echo", abc)
+      } yield ()
+
+    val expected =
+      """abc=123
+        |
+        |echo "$abc"""".stripMargin
 
     expect.eql(expected, Encoder.encode(prog))
   }

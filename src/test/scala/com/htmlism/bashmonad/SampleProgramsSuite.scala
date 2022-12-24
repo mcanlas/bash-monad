@@ -7,11 +7,14 @@ object SampleProgramsSuite extends FunSuite {
   test("args one") {
     val prog =
       for {
-        _ <- Args("abc")
+        _ <- Args.string("abc")
       } yield ()
 
     val expected =
-      """abc=$1""".stripMargin
+      """abc=$1
+        |
+        |if
+        |fi""".stripMargin
 
     expect.eql(expected, Encoder.encode(prog))
   }
@@ -19,12 +22,15 @@ object SampleProgramsSuite extends FunSuite {
   test("args two") {
     val prog =
       for {
-        _ <- Args("abc", "def")
+        _ <- Args.string("abc").string("def")
       } yield ()
 
     val expected =
       """abc=$1
-        |def=$2""".stripMargin
+        |def=$2
+        |
+        |if
+        |fi""".stripMargin
 
     expect.eql(expected, Encoder.encode(prog))
   }
@@ -32,13 +38,16 @@ object SampleProgramsSuite extends FunSuite {
   test("args three") {
     val prog =
       for {
-        _ <- Args("abc", "def", "xyz")
+        _ <- Args.string("abc").string("def").string("xyz")
       } yield ()
 
     val expected =
       """abc=$1
         |def=$2
-        |xyz=$3""".stripMargin
+        |xyz=$3
+        |
+        |if
+        |fi""".stripMargin
 
     expect.eql(expected, Encoder.encode(prog))
   }

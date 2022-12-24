@@ -18,9 +18,9 @@ final case class BashProgram[A](x: A, lines: List[String], parent: Option[BashPr
     def recur(x: BashProgram[_], all: List[BashProgram[_]]): List[BashProgram[_]] =
       x.parent match {
         case Some(p) =>
-          recur(p, p :: all)
+          recur(p, x :: all)
         case None =>
-          this :: all
+          x :: all
       }
 
     recur(this, Nil)

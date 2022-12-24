@@ -58,4 +58,15 @@ object BashMonadSuite extends FunSuite {
 
     expect.eql("foo\n\nbar", Encoder.encode(prog))
   }
+
+  test("payload echo, map and flatMap, with implicit conversion") {
+    val prog =
+      for {
+        _ <- Cmd("foo")
+
+        _ <- Raw("bar")
+      } yield ()
+
+    expect.eql("foo\n\nbar", Encoder.encode(prog))
+  }
 }

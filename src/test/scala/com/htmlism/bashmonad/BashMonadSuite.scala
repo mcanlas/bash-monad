@@ -38,4 +38,24 @@ object BashMonadSuite extends FunSuite {
 
     expect.eql(4, countingDown.size)
   }
+
+  test("payload echo with map") {
+    val prog =
+      for {
+        _ <- BashProgram((), "ls")
+      } yield ()
+
+    expect.eql("ls", Encoder.encode(prog))
+  }
+
+  test("payload echo, map and flatMap") {
+    val prog =
+      for {
+        _ <- BashProgram((), "foo")
+
+        _ <- BashProgram((), "bar")
+      } yield ()
+
+    expect.eql("foo\n\nbar", Encoder.encode(prog))
+  }
 }

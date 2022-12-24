@@ -9,7 +9,7 @@ object BashArgument {
   implicit def strToArg(s: String): BashArgument =
     BashArgument(quote(s))
 
-  private def quote(s: String) =
+  def quote(s: String) =
     s
       .replace("\\", "\\\\")
       .replace("\"", "\\\"")

@@ -1,13 +1,24 @@
 package com.htmlism
 
+import scala.util.chaining._
+
 package object bashmonad {
   implicit class BashInterpolator(sc: StringContext) {
-    def bash(xs: EnvironmentVariable*): String =
-      (sc.parts.head :: xs
-        .zip(sc.parts.tail)
+    def bash(xs: EnvironmentVariable*): BashArgument = {
+      val escapedParts =
+        sc
+          .parts
+          .map(BashArgument.quote)
+
+      (escapedParts.head :: xs
+        .zip(escapedParts.tail)
         .toList
-        .flatMap(ab => List("${", ab._1.name, "}", ab._2)))
+        .flatMap { case (bVar, s) =>
+          List("${", bVar.name, "}", s)
+        })
         .mkString("")
+        .pipe(BashArgument(_))
+    }
   }
 
   implicit def toBashProgram[A, B](x: A)(implicit enc: BashProgramEncoder[A, B]): BashProgram[B] =

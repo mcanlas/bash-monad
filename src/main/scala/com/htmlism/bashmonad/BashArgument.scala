@@ -13,6 +13,8 @@ object BashArgument {
     s
       .replace("\\", "\\\\")
       .replace("\"", "\\\"")
+      // exclamation repeats previous bash commands
+      .replace("!", "\\!")
       .pipe {
         case s if s.contains("${") =>
           "\"" + s + "\""

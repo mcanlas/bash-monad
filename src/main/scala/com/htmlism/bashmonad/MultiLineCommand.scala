@@ -4,8 +4,8 @@ import scala.annotation.tailrec
 
 //import scala.util.chaining._
 
-final case class MultiLineCommand(xs: List[String], options: List[(String, Option[BashArgument])]) {
-  def apply(ys: String*): MultiLineCommand =
+final case class MultiLineCommand(xs: List[BashArgument], options: List[(String, Option[BashArgument])]) {
+  def apply(ys: BashArgument*): MultiLineCommand =
     copy(xs = xs ++ ys.toList)
 
   def opt(s: String): MultiLineCommand =
@@ -19,7 +19,7 @@ object MultiLineCommand {
   implicit val multiAsBash: BashProgramEncoder[MultiLineCommand, Unit] =
     (multi: MultiLineCommand) => {
       val head =
-        multi.xs.mkString(" ")
+        multi.xs.map(_.s).mkString(" ")
 
       val indents =
         multi
@@ -37,7 +37,7 @@ object MultiLineCommand {
       BashProgram(interSlash(head :: indents, Nil))
     }
 
-  def apply(xs: String*): MultiLineCommand =
+  def apply(xs: BashArgument*): MultiLineCommand =
     MultiLineCommand(xs.toList, Nil)
 
   @tailrec

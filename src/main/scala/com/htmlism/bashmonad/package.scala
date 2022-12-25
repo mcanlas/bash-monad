@@ -3,6 +3,9 @@ package com.htmlism
 import scala.util.chaining._
 
 package object bashmonad {
+  val Args =
+    args.Args
+
   implicit class BashInterpolator(sc: StringContext) {
     def bash(xs: EnvironmentVariable*): BashArgument = {
       val escapedParts =

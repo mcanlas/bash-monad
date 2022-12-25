@@ -126,4 +126,21 @@ object SampleProgramsSuite extends FunSuite {
 
     expect.eql(expected, Encoder.encode(prog))
   }
+
+  test("multi-line command") {
+    val prog =
+      for {
+        _ <- MultiLineCommand("aws", "lambda")("list-tags")
+          .opt("hello")
+          .opt("hello-world", "foo")
+      } yield ()
+
+    val expected =
+      """aws lambda list-tags \
+        |  --hello \
+        |  --hello-world \
+        |    foo""".stripMargin
+
+    expect.eql(expected, Encoder.encode(prog))
+  }
 }

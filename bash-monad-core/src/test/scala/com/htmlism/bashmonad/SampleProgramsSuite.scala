@@ -1,6 +1,5 @@
 package com.htmlism.bashmonad
 
-import cats.syntax.all._
 import weaver._
 
 object SampleProgramsSuite extends FunSuite {

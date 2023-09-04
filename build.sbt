@@ -1,7 +1,7 @@
 lazy val root =
   Project("bash-monad", file("."))
     .aggregate(core)
-    .disablePublshing
+    .disablePublishing
 
 lazy val core =
   module("core")

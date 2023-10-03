@@ -1,10 +1,10 @@
 package com.htmlism.bashmonad
 
 object Encoder {
-  def toLines(x: BashProgram[_]): List[String] =
+  def toLines(x: BashProgram[?]): List[String] =
     interFlatMap(x.flatten)(List(""), _.lines)
 
-  def encode(x: BashProgram[_]): String =
+  def encode(x: BashProgram[?]): String =
     toLines(x)
       .mkString("\n")
 

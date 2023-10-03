@@ -1,6 +1,6 @@
 package com.htmlism.bashmonad
 
-import scala.util.chaining._
+import scala.util.chaining.*
 
 final case class BashArgument(s: String) extends AnyVal
 

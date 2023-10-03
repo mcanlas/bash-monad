@@ -1,6 +1,6 @@
 package com.htmlism.bashmonad
 
-import weaver._
+import weaver.*
 
 object SampleProgramsSuite extends FunSuite {
   test("args one") {

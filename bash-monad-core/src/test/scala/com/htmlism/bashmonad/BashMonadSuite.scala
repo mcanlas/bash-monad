@@ -1,8 +1,8 @@
 package com.htmlism.bashmonad
 
-import cats._
-import cats.syntax.all._
-import weaver._
+import cats.*
+import cats.syntax.all.*
+import weaver.*
 
 object BashMonadSuite extends FunSuite {
   test("functor syntax") {

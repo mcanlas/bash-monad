@@ -1,6 +1,6 @@
 package com.htmlism.bashmonad
 
-import weaver._
+import weaver.*
 
 object ReadmeSuite extends FunSuite {
   object Aws {

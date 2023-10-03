@@ -1,6 +1,6 @@
 package com.htmlism
 
-import scala.util.chaining._
+import scala.util.chaining.*
 
 package object bashmonad {
   val Args =

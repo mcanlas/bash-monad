@@ -2,9 +2,9 @@ package com.htmlism.bashmonad
 
 import scala.annotation.tailrec
 
-import cats._
+import cats.*
 
-final case class BashProgram[+A](x: A, lines: List[String], history: List[BashProgram[_]]) {
+final case class BashProgram[+A](x: A, lines: List[String], history: List[BashProgram[?]]) {
   def map[B](f: A => B): BashProgram[B] =
     copy(x = f(x))
 
@@ -16,7 +16,7 @@ final case class BashProgram[+A](x: A, lines: List[String], history: List[BashPr
       .copy(history = this.history ::: this :: fb.history)
   }
 
-  def flatten: List[BashProgram[_]] =
+  def flatten: List[BashProgram[?]] =
     history :+ this
 }
 
@@ -32,7 +32,7 @@ object BashProgram {
 
       def tailRecM[A, B](a: A)(f: A => BashProgram[Either[A, B]]): BashProgram[B] = {
         @tailrec
-        def recur(res: BashProgram[Either[A, B]], agg: List[BashProgram[_]]): BashProgram[B] =
+        def recur(res: BashProgram[Either[A, B]], agg: List[BashProgram[?]]): BashProgram[B] =
           res.x match {
             case Left(a) =>
               val fb =

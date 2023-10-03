@@ -1,6 +1,6 @@
 package com.htmlism.bashmonad
 
-import weaver._
+import weaver.*
 
 object InterpolatorSuite extends FunSuite {
   test("bash string interpolator exists") {

@@ -5,7 +5,11 @@ package object args {
     val indices =
       xs
         .zipWithIndex
-        .map { case (s, i) => s + "=$" + (i + 1) }
+        .map { case (s, i) =>
+          val position = i + 1
+
+          s"$s=$$$position"
+        }
 
     val vars =
       xs

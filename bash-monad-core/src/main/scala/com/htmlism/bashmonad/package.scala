@@ -12,15 +12,22 @@ package object bashmonad {
         sc
           .parts
           .map(BashArgument.quote)
+          .toList
 
-      (escapedParts.head :: xs
-        .zip(escapedParts.tail)
-        .toList
-        .flatMap { case (bVar, s) =>
-          List("${", bVar.name, "}", s)
-        })
-        .mkString("")
-        .pipe(BashArgument(_))
+      escapedParts match {
+        case head :: tail =>
+          (head :: xs
+            .zip(tail)
+            .toList
+            .flatMap { case (bVar, s) =>
+              List("${", bVar.name, "}", s)
+            })
+            .mkString("")
+            .pipe(BashArgument(_))
+
+        case Nil =>
+          BashArgument("")
+      }
     }
   }
 
